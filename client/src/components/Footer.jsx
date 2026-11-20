@@ -5,7 +5,7 @@ const techStack = [
   { name: 'Vite 5', type: 'Bundler' },
   { name: 'Node.js', type: 'Runtime' },
   { name: 'Express.js', type: 'Backend API' },
-  { name: 'Google Cloud Translation', type: 'AI Engine' },
+  { name: 'MyMemory API', type: 'Translation Engine' },
   { name: 'Web Speech API', type: 'TTS' },
 ];
 

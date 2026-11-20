@@ -1,6 +1,6 @@
 const { Router } = require('express');
 const axios = require('axios');
-const { translateText, getSupportedLanguages } = require('../services/googleTranslate');
+const { translateText, getSupportedLanguages } = require('../services/myMemoryTranslate');
 
 const router = Router();
 
@@ -31,31 +31,17 @@ router.post('/translate', async (req, res) => {
     const result = await translateText({ text, targetLanguage, sourceLanguage });
     return res.status(200).json(result);
   } catch (err) {
-    if (err.message === 'API_KEY_MISSING') {
-      return res.status(503).json({
-        error:
-          'Translation service not configured. Please add your Google API key to the server .env file.',
-        code: 'API_KEY_MISSING',
-      });
-    }
     console.error('Translation error:', err.message);
-    return res.status(500).json({ error: 'Translation failed. Please try again.' });
+    const status = err.message.includes('limit') || err.message.includes('quota') ? 429 : 500;
+    return res.status(status).json({ error: err.message || 'Translation failed. Please try again.' });
   }
 });
 
 router.get('/languages', async (req, res) => {
-  const locale = req.query.locale || 'en';
-
   try {
-    const languages = await getSupportedLanguages(locale);
+    const languages = await getSupportedLanguages();
     return res.status(200).json({ languages });
   } catch (err) {
-    if (err.message === 'API_KEY_MISSING') {
-      return res.status(503).json({
-        error: 'Translation service not configured.',
-        code: 'API_KEY_MISSING',
-      });
-    }
     console.error('Languages fetch error:', err.message);
     return res.status(500).json({ error: 'Failed to fetch languages.' });
   }

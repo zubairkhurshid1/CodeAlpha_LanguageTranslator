@@ -1,31 +1,32 @@
 # 🌐 LinguaAI — Language Translation Tool
 
-> CodeAlpha Artificial Intelligence Internship — Task 1
+> Free & Open-Source Language Translation Web Application
 
 ![React](https://img.shields.io/badge/React-18-61DAFB?style=flat-square&logo=react&logoColor=white)
 ![Vite](https://img.shields.io/badge/Vite-5-646CFF?style=flat-square&logo=vite&logoColor=white)
 ![Node.js](https://img.shields.io/badge/Node.js-18+-339933?style=flat-square&logo=node.js&logoColor=white)
 ![Express](https://img.shields.io/badge/Express-4-000000?style=flat-square&logo=express&logoColor=white)
+![MyMemory API](https://img.shields.io/badge/API-MyMemory%20Translation-blue?style=flat-square)
 ![License](https://img.shields.io/badge/License-MIT-yellow?style=flat-square)
 
-A beautiful, production-ready language translation web application. Built with React, Vite, Node.js, and Express.
+A modern, responsive, and production-ready language translation web application powered exclusively by the **MyMemory Translation API**. Built with React, Vite, Node.js, and Express. No credit card, billing accounts, or paid API keys required.
 
 ---
 
 ## ✨ Features
 
-- 🌍 Translate text between 100+ languages
+- 🌍 Translate text between multiple world languages (English, Spanish, French, German, Urdu, Arabic, Chinese, Japanese, and more)
 - 🔍 Auto-detect source language
-- 🔄 Swap source and target languages
-- 📋 Copy translated text to clipboard
-- 🔊 Text-to-speech for translated output
-- ⬇️ Download translation as .txt file
-- 📜 Translation history (saved in localStorage, up to 20 entries)
-- ♻️ Reuse previous translations
-- ⌨️ Keyboard shortcut: Ctrl+Enter to translate
-- 🌙 Light / Dark mode toggle
-- 📱 Fully responsive (mobile, tablet, desktop)
-- ⚡ Loading indicators and error handling
+- 🔄 Swap source and target languages instantly
+- 📋 Copy translated text to clipboard with 1-click feedback
+- 🔊 Natural text-to-speech voice pronunciation
+- ⬇️ Download translations as `.txt` files
+- 📜 Local translation history with quick reuse
+- ⌨️ Keyboard shortcut: `Ctrl + Enter` (or `Cmd + Enter`) to translate
+- 🌙 High-contrast Light and Dark mode toggle
+- 📱 Responsive layout optimized for mobile, tablet, and desktop
+- ⚡ Rate limiting and clear error handling for network limits and unsupported requests
+- 🆓 **100% Free**: Powered by MyMemory API without Google Cloud billing or payment cards
 
 ---
 
@@ -33,16 +34,18 @@ A beautiful, production-ready language translation web application. Built with R
 
 | Technology | Purpose |
 |---|---|
-| **React 18** | UI component library |
-| **Vite 5** | Frontend build tool & dev server |
-| **JavaScript ES6+** | Frontend language |
-| **CSS3 (custom properties)** | Styling with theme support |
-| **Lucide React** | Icon library |
-| **Node.js 18+** | Backend runtime |
-| **Express.js 4** | Backend web framework |
-| **Axios** | HTTP client |
-| **dotenv** | Environment variable management |
-| **CORS** | Cross-origin request handling |
+| **React 18** | UI component architecture |
+| **Vite 5** | Frontend build tool and rapid dev server |
+| **JavaScript (ES6+)** | Modern client and server code |
+| **CSS3** | Responsive design with theme variables |
+| **Lucide React** | Icons |
+| **Node.js 18+** | Backend server runtime |
+| **Express.js 4** | RESTful backend framework |
+| **MyMemory API** | Free machine translation service |
+| **Axios** | Backend HTTP client |
+| **Web Speech API** | Client-side audio pronunciation |
+| **dotenv & CORS** | Environment & security management |
+
 ---
 
 ## 📁 Project Structure
@@ -59,7 +62,8 @@ codealpha-language-translator/
 │       │   ├── TranslationHistory.jsx
 │       │   └── Footer.jsx
 │       ├── services/
-│       │   └── translationService.js
+│       │   ├── translationService.js
+│       │   └── speechService.js
 │       ├── hooks/
 │       │   ├── useTheme.js
 │       │   └── useTranslationHistory.js
@@ -70,7 +74,7 @@ codealpha-language-translator/
 │   ├── routes/
 │   │   └── translate.js
 │   ├── services/
-│   │   └── googleTranslate.js
+│   │   └── myMemoryTranslate.js
 │   ├── server.js
 │   ├── .env.example
 │   └── package.json
@@ -84,14 +88,13 @@ codealpha-language-translator/
 
 ### Prerequisites
 
-- Node.js 18+ and npm
-- A Google Cloud account with billing enabled
+- [Node.js](https://nodejs.org/) (version 18 or higher) and `npm`
+- No payment card, billing, or external account setup required!
 
-### 1. Clone the Repository
+### 1. Clone or Open the Repository
 
 ```bash
-git clone https://github.com/yourusername/codealpha-language-translator.git
-cd codealpha-language-translator
+cd "codealpha-language-translator"
 ```
 
 ### 2. Backend Setup
@@ -99,13 +102,15 @@ cd codealpha-language-translator
 ```bash
 cd server
 npm install
-cp .env.example .env
+copy .env.example .env
 npm run dev
 ```
 
-> Server runs at **http://localhost:5000**
+> The server will start on **http://localhost:5000**
 
 ### 3. Frontend Setup
+
+In a new terminal window:
 
 ```bash
 cd client
@@ -113,7 +118,7 @@ npm install
 npm run dev
 ```
 
-> App runs at **http://localhost:5173**
+> The web app will open at **http://localhost:5173**
 
 ---
 
@@ -121,31 +126,67 @@ npm run dev
 
 ### Backend (`server/.env`)
 
-```
+```env
+PORT=5000
 CLIENT_ORIGIN=http://localhost:5173
 ```
 
-### Frontend (`client/.env` — only for production deployment)
+*(No API keys or billing credentials needed!)*
 
+### Frontend (`client/.env` — Optional for production)
+
+```env
+VITE_API_URL=https://your-backend-url.onrender.com/api
+```
+
+---
+
+## 🌐 How the MyMemory API Integration Works
+
+All translation requests are routed through the secure Express backend (`POST /api/translate`) to prevent CORS restrictions and keep the client-side clean:
+
+1. The frontend sends:
+   ```json
+   {
+     "text": "Hello world",
+     "sourceLanguage": "en",
+     "targetLanguage": "es"
+   }
+   ```
+2. The backend sends a request to MyMemory API:
+   ```
+   https://api.mymemory.translated.net/get?q=Hello%20world&langpair=en|es
+   ```
+3. MyMemory translates the string and returns the JSON payload.
+4. The backend formats and returns:
+   ```json
+   {
+     "translatedText": "Hola mundo",
+     "detectedSourceLanguage": "en"
+   }
+   ```
 
 ---
 
 ## 🌐 Deployment
 
-### Frontend — Vercel
+### Frontend (Vercel)
+1. Push code to GitHub.
+2. Import project into [Vercel](https://vercel.com) and set **Root Directory** to `client`.
+3. Add environment variable `VITE_API_URL` pointing to your deployed backend URL (e.g., `https://your-backend.onrender.com/api`).
+4. Click Deploy.
 
-1. Push code to GitHub
-2. Import repo in [Vercel](https://vercel.com)
-3. Set **Root Directory** to `client`
-4. Add environment variable `VITE_API_URL` pointing to your deployed backend
-5. Deploy
-
-### Backend — Render
-
-1. Create new **Web Service** on [render.com](https://render.com)
-2. Set **Root Directory** to `server`
-3. **Build Command:** `npm install`
-4. **Start Command:** `node server.js`
-5. Deploy
+### Backend (Render)
+1. Create a new **Web Service** on [Render](https://render.com).
+2. Set **Root Directory** to `server`.
+3. Set **Build Command:** `npm install` and **Start Command:** `node server.js`.
+4. Add environment variables:
+   - `PORT=5000`
+   - `CLIENT_ORIGIN=https://your-frontend.vercel.app`
+5. Click Deploy.
 
 ---
+
+## 📄 License
+
+MIT License — see LICENSE for details.
