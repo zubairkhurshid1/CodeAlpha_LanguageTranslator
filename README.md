@@ -129,23 +129,3 @@ CLIENT_ORIGIN=http://localhost:5173
 
 
 ---
-
-## 🌐 Deployment
-
-### Frontend — Vercel
-
-1. Push code to GitHub
-2. Import repo in [Vercel](https://vercel.com)
-3. Set **Root Directory** to `client`
-4. Add environment variable `VITE_API_URL` pointing to your deployed backend
-5. Deploy
-
-### Backend — Render
-
-1. Create new **Web Service** on [render.com](https://render.com)
-2. Set **Root Directory** to `server`
-3. **Build Command:** `npm install`
-4. **Start Command:** `node server.js`
-5. Deploy
-
----
